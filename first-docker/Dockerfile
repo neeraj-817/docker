@@ -1,16 +1,26 @@
-FROM ubuntu:latest
+#FROM ubuntu:latest
 
 # Set the working directory in the image
-WORKDIR /app
+# WORKDIR /app
 
 # Copy the files from the host file system to the image file system
-COPY . /app
+#COPY . /app
 
 # Install the necessary packages
-RUN apt-get update && apt-get install -y python3 python3-pip
+#RUN apt-get update && apt-get install -y python3 python3-pip
 
 # Set environment variables
-ENV NAME World
+#ENV NAME World
 
 # Run a command to start the application
-CMD ["python3", "app.py"]
+#CMD ["python3", "app.py"]
+
+
+FROM python:3-slim AS build-env
+COPY . /app
+WORKDIR /app
+
+FROM gcr.io/distroless/python3
+COPY --from=build-env /app /app
+WORKDIR /app
+CMD ["hello.py", "/etc"]
